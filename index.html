@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stephens Tapestry Studio — Est. 1962</title>
+  <style>
+/* ══════════════════════════════════════════════════════
+   STEPHENS TAPESTRY STUDIO — style.css
+   Aesthetic: Minimal luxury / Gallery-grade editorial
+   Inspired by Goodman Gallery visual language
+══════════════════════════════════════════════════════ */
+
+/* ── VARIABLES ── */
+:root {
+  --black: #0a0a0a;
+  --off-black: #111110;
+  --charcoal: #1c1c1b;
+  --warm-gray: #8a8680;
+  --light-gray: #d4d0ca;
+  --off-white: #f5f3ef;
+  --white: #ffffff;
+  --accent: #c19a6b;          /* warm gold — mohair warmth */
+  --accent-dark: #8a6d4e;
+
+  --font-serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --nav-h: 64px;
+  --section-pad: 120px;
+  --section-pad-sm: 72px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-sans);
+  background: var(--off-white);
+  color: var(--off-black);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ── UTILITY ── */
+.hidden { display: none !important; }
+.section {
+  padding: var(--section-pad) clamp(24px, 6vw, 96px);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.img-placeholder {
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.8s var(--ease-out);
+}
+.img-placeholder.dark { filter: brightness(0.85); }
+
+/* ══════════════════════════════════════════════════════
+   PASSWORD GATE
+══════════════════════════════════════════════════════ */
+#password-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--off-black);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+#password-gate.fade-exit {
+  opacity: 0;
+  pointer-events: none;
+}
+.gate-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 60% 40%, rgba(193,154,107,0.06) 0%, transparent 70%);
+}
+.gate-content {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 40px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 48px;
+}
+.gate-logo { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.gate-est {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  animation: gateReveal 1s 0.3s var(--ease-out) forwards;
+}
+.gate-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(42px, 8vw, 96px);
+  line-height: 0.95;
+  color: var(--off-white);
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: gateReveal 1.2s 0.5s var(--ease-out) forwards;
+}
+.gate-message {
+  opacity: 0;
+  animation: gateReveal 1s 0.9s var(--ease-out) forwards;
+}
+.gate-message p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--warm-gray);
+  max-width: 360px;
+}
+.gate-form {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  opacity: 0;
+  animation: gateReveal 1s 1.1s var(--ease-out) forwards;
+}
+.gate-input-wrap {
+  display: flex; gap: 0;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+#gate-input {
+  background: rgba(255,255,255,0.04);
+  border: none; outline: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--off-white);
+  padding: 14px 20px;
+  width: 200px;
+  text-align: center;
+}
+#gate-input::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 0.15em; }
+#gate-btn {
+  background: var(--accent);
+  color: var(--off-black);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  transition: background 0.3s ease;
+}
+#gate-btn:hover { background: var(--accent-dark); }
+.gate-error {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #c0624a;
+  opacity: 0;
+  transition: opacity 0.3s;
+  height: 16px;
+}
+.gate-error.visible { opacity: 1; }
+.gate-input-wrap.shake { animation: shake 0.4s ease; }
+.gate-footer {
+  position: absolute; bottom: 32px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  opacity: 0;
+  animation: gateReveal 1s 1.5s ease forwards;
+}
+
+@keyframes gateReveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 900;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+#nav.scrolled {
+  background: rgba(245,243,239,0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(24px, 5vw, 72px);
+  height: var(--nav-h);
+}
+.nav-logo a {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--off-black);
+  transition: color 0.3s;
+}
+.nav-logo a:hover { color: var(--accent-dark); }
+.nav-links {
+  display: flex; gap: 36px;
+}
+.nav-links a {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s var(--ease-out);
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-hamburger {
+  display: none;
+  flex-direction: column; gap: 6px;
+  width: 28px; padding: 4px 0;
+}
+.nav-hamburger span {
+  display: block; height: 1px;
+  background: var(--off-black);
+  transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+}
+.nav-hamburger span:last-child { width: 70%; }
+.nav-hamburger.open span:first-child { transform: translateY(3.5px) rotate(45deg); width: 100%; }
+.nav-hamburger.open span:last-child { transform: translateY(-3.5px) rotate(-45deg); width: 100%; }
+
+/* Mobile menu */
+.mobile-menu {
+  position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: var(--off-white);
+  z-index: 899;
+  display: flex; flex-direction: column;
+  padding: 24px clamp(24px, 5vw, 72px);
+  gap: 20px;
+  transform: translateY(-10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s var(--ease-out);
+  border-bottom: 1px solid var(--light-gray);
+}
+.mobile-menu.open { transform: translateY(0); opacity: 1; pointer-events: all; }
+.mm-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  font-weight: 300;
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO / HOME
+══════════════════════════════════════════════════════ */
+.section-home {
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+  max-width: 100%;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.hero-media {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+.hero-placeholder {
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+  animation: heroScale 12s ease forwards;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,10,0.35) 0%,
+    rgba(10,10,10,0.1) 50%,
+    rgba(10,10,10,0.6) 100%
+  );
+}
+@keyframes heroScale {
+  from { transform: scale(1.04); }
+  to { transform: scale(1); }
+}
+.hero-text {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: calc(var(--nav-h) + 40px) clamp(24px, 6vw, 96px) 80px;
+}
+.hero-est {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.hero-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(52px, 9vw, 120px);
+  line-height: 0.92;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+.hero-heading em { font-style: italic; font-weight: 300; }
+.hero-sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.72);
+  max-width: 360px;
+}
+.hero-scroll-hint {
+  position: absolute; right: clamp(24px, 5vw, 72px); bottom: 80px;
+  z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.hero-scroll-hint span {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  writing-mode: vertical-rl;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: rgba(255,255,255,0.2);
+  position: relative; overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute; top: -100%; width: 1px; height: 100%;
+  background: var(--accent);
+  animation: scrollAnim 2s ease infinite;
+}
+@keyframes scrollAnim {
+  from { top: -100%; }
+  to { top: 100%; }
+}
+
+/* INTRO BAND */
+.intro-band {
+  position: relative; z-index: 2;
+  background: var(--off-white);
+  padding: 56px clamp(24px, 6vw, 96px);
+}
+.intro-statement {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.4vw, 32px);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--charcoal);
+  max-width: 820px;
+  border-left: 2px solid var(--accent);
+  padding-left: 32px;
+}
+
+/* FADE UP ANIMATIONS */
+.fade-up { opacity: 0; transform: translateY(30px); }
+.fade-up.visible { animation: fadeUp 0.9s var(--ease-out) forwards; }
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.45s; }
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION HEADERS
+══════════════════════════════════════════════════════ */
+.section-header {
+  margin-bottom: 72px;
+  border-top: 1px solid var(--light-gray);
+  padding-top: 40px;
+}
+.section-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1;
+  color: var(--off-black);
+  letter-spacing: -0.01em;
+}
+
+/* REVEAL ANIMATION */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════════════════════════════════════════
+   OUR STORY
+══════════════════════════════════════════════════════ */
+.section-story { background: var(--off-white); }
+
+.story-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 80px;
+  align-items: start;
+}
+.story-pullquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--charcoal);
+  margin-bottom: 28px;
+}
+.story-text p {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--warm-gray);
+  margin-bottom: 18px;
+}
+.story-image-frame {
+  position: relative;
+}
+.story-image-frame .img-placeholder {
+  height: 480px;
+  overflow: hidden;
+}
+.story-image-frame:hover .img-placeholder { transform: scale(1.02); }
+.img-caption {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-top: 12px;
+}
+
+/* TIMELINE */
+.story-timeline {
+  margin: 80px 0;
+  display: flex; flex-direction: column; gap: 0;
+}
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 1px 1fr;
+  gap: 0 32px;
+  padding-bottom: 48px;
+  position: relative;
+}
+.tl-year {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  padding-top: 4px;
+  text-align: right;
+}
+.tl-line {
+  width: 1px;
+  background: var(--light-gray);
+  position: relative;
+}
+.tl-line::before {
+  content: '';
+  position: absolute; top: 6px; left: 50%;
+  transform: translateX(-50%);
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--off-white);
+  border: 1px solid var(--accent);
+}
+.tl-body { padding-left: 0; }
+.tl-body h3 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--off-black);
+  margin-bottom: 10px;
+}
+.tl-body p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--warm-gray);
+}
+
+.story-footer-quote {
+  border-top: 1px solid var(--light-gray);
+  padding-top: 56px;
+  text-align: center;
+}
+.story-footer-quote blockquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--charcoal);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.story-footer-quote cite {
+  display: block;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-top: 20px;
+}
+
+/* ══════════════════════════════════════════════════════
+   PROCESS
+══════════════════════════════════════════════════════ */
+.section-process { background: var(--white); }
+
+.process-intro {
+  max-width: 640px;
+  margin-bottom: 80px;
+}
+.process-intro p {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--charcoal);
+}
+
+.process-steps { display: flex; flex-direction: column; gap: 0; }
+
+.process-step {
+  position: relative;
+  padding: 72px 0;
+  border-top: 1px solid var(--light-gray);
+}
+.step-number {
+  position: absolute; top: 72px; left: 0;
+  font-family: var(--font-serif);
+  font-size: 72px;
+  font-weight: 300;
+  color: rgba(0,0,0,0.04);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -0.03em;
+}
+.step-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+.process-step.step-reverse .step-content { direction: rtl; }
+.process-step.step-reverse .step-text { direction: ltr; }
+.step-image {
+  height: 420px;
+  overflow: hidden;
+}
+.step-image:hover .img-placeholder { transform: scale(1.03); }
+.step-text h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 300;
+  color: var(--off-black);
+  margin-bottom: 20px;
+}
+.step-text p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--warm-gray);
+}
+
+/* Process banner */
+.process-banner {
+  margin-top: 80px;
+  height: 320px;
+  overflow: hidden;
+}
+.pb-inner {
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.pb-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+.pb-text {
+  position: relative; z-index: 1;
+  display: flex; gap: 32px; align-items: center;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3.5vw, 48px);
+  font-weight: 300;
+  color: var(--off-white);
+  letter-spacing: 0.02em;
+}
+.pb-text span:nth-child(2) { color: var(--accent); font-size: 0.6em; }
+.pb-text span:nth-child(4) { color: var(--accent); font-size: 0.6em; }
+
+/* ══════════════════════════════════════════════════════
+   ARTISTS
+══════════════════════════════════════════════════════ */
+.section-artists { background: var(--off-white); }
+
+.artists-intro {
+  max-width: 620px;
+  margin-bottom: 80px;
+}
+.artists-intro p {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--warm-gray);
+}
+
+.artist-feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+  padding: 64px 0;
+  border-top: 1px solid var(--light-gray);
+}
+.artist-feature--alt { direction: rtl; }
+.artist-feature--alt .af-content { direction: ltr; }
+
+.af-image {
+  height: 560px;
+  overflow: hidden;
+}
+.af-image:hover .img-placeholder { transform: scale(1.03); }
+
+.af-content { display: flex; flex-direction: column; gap: 20px; }
+.af-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.af-name {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 300;
+  color: var(--off-black);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.af-bio {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--warm-gray);
+}
+.af-series { margin-top: 8px; }
+.af-series-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--light-gray);
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--light-gray);
+  padding-bottom: 10px;
+}
+.af-series-list {
+  display: flex; flex-direction: column; gap: 0;
+}
+.af-series-list a {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--charcoal);
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  display: flex; justify-content: space-between;
+  transition: color 0.25s ease, padding-left 0.25s ease;
+}
+.af-series-list a::after { content: '→'; opacity: 0; transition: opacity 0.25s ease; }
+.af-series-list a:hover { color: var(--accent-dark); padding-left: 6px; }
+.af-series-list a:hover::after { opacity: 1; }
+
+.artists-more {
+  padding: 64px 0;
+  border-top: 1px solid var(--light-gray);
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+}
+.artists-more p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--warm-gray);
+  max-width: 480px;
+}
+.btn-outline {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--off-black);
+  border: 1px solid var(--off-black);
+  padding: 14px 32px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.btn-outline:hover { background: var(--off-black); color: var(--off-white); }
+
+/* ══════════════════════════════════════════════════════
+   GALLERY
+══════════════════════════════════════════════════════ */
+.section-gallery { background: var(--white); }
+
+.gallery-intro {
+  margin-bottom: 48px;
+}
+.gallery-intro p {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--warm-gray);
+  margin-bottom: 8px;
+}
+.gallery-note {
+  font-size: 11px !important;
+  color: var(--light-gray) !important;
+  font-style: italic;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 10px;
+}
+.gallery-item {
+  overflow: hidden;
+  cursor: pointer;
+}
+.gi-large { grid-column: span 2; grid-row: span 2; }
+.gi-tall { grid-row: span 2; }
+.gi-wide { grid-column: span 2; }
+.gi-square {}
+
+.gi-inner {
+  width: 100%; height: 100%;
+  min-height: 240px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: transform 0.6s var(--ease-out);
+  display: flex; align-items: flex-end;
+}
+.gallery-item:hover .gi-inner { transform: scale(1.02); }
+.gi-overlay {
+  position: absolute; inset: 0;
+  background: rgba(10,10,10,0);
+  display: flex; align-items: flex-end;
+  padding: 16px;
+  transition: background 0.4s ease;
+}
+.gi-overlay span {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--off-white);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.gallery-item:hover .gi-overlay { background: rgba(10,10,10,0.45); }
+.gallery-item:hover .gi-overlay span { opacity: 1; transform: translateY(0); }
+
+/* LIGHTBOX */
+.lightbox {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.95);
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: 20px;
+}
+.lightbox.open { display: flex; }
+.lb-close, .lb-prev, .lb-next {
+  position: absolute;
+  font-family: var(--font-sans);
+  font-size: 28px;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 2;
+  user-select: none;
+}
+.lb-close:hover, .lb-prev:hover, .lb-next:hover { color: white; }
+.lb-close { top: 32px; right: 40px; font-size: 20px; letter-spacing: 0.1em; }
+.lb-prev { left: 40px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 40px; top: 50%; transform: translateY(-50%); }
+.lb-image-wrap {
+  max-width: 85vw; max-height: 80vh;
+  display: flex; align-items: center; justify-content: center;
+}
+.lb-image {
+  width: 80vw; max-height: 78vh;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.lb-caption {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ══════════════════════════════════════════════════════
+   MEDIA
+══════════════════════════════════════════════════════ */
+.section-media { background: var(--off-black); color: var(--off-white); }
+.section-media .section-header { border-top-color: rgba(255,255,255,0.08); }
+.section-media .section-title { color: var(--off-white); }
+.section-media .section-label { color: var(--accent); }
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-bottom: 72px;
+}
+.media-item {
+  padding: 32px 24px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.3s ease;
+}
+.media-item:nth-child(3n) { border-right: none; }
+.media-item:hover { background: rgba(255,255,255,0.03); }
+.mi-year {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.mi-venue {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 8px;
+}
+.mi-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.35;
+  color: var(--off-white);
+  margin-bottom: 6px;
+}
+.mi-location {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+.mi-link {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+.mi-link:hover { opacity: 0.7; }
+
+/* Press list */
+.media-press {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 48px;
+}
+.mp-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 24px;
+}
+.press-list { display: flex; flex-direction: column; }
+.press-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: opacity 0.2s;
+}
+.press-item:hover { opacity: 0.7; }
+.pi-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--off-white);
+}
+.pi-arrow {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.press-item:hover .pi-arrow { opacity: 1; transform: translateX(4px); }
+
+/* ══════════════════════════════════════════════════════
+   CONTACT
+══════════════════════════════════════════════════════ */
+.section-contact { background: var(--off-white); }
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.contact-block { margin-bottom: 32px; }
+.cb-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 8px;
+}
+.cb-value {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--off-black);
+  line-height: 1.5;
+}
+.cb-value a { transition: color 0.2s; }
+.cb-value a:hover { color: var(--accent-dark); }
+.contact-socials {
+  display: flex; gap: 24px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--light-gray);
+}
+.social-link {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  transition: color 0.2s;
+  position: relative;
+}
+.social-link::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+.social-link:hover { color: var(--accent-dark); }
+.social-link:hover::after { width: 100%; }
+
+/* CONTACT FORM */
+.contact-form { display: flex; flex-direction: column; gap: 24px; }
+.cf-field { display: flex; flex-direction: column; gap: 8px; }
+.cf-field label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+}
+.cf-field input,
+.cf-field select,
+.cf-field textarea {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--off-black);
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+  padding: 13px 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  -webkit-appearance: none;
+  border-radius: 0;
+  width: 100%;
+}
+.cf-field input:focus,
+.cf-field select:focus,
+.cf-field textarea:focus { border-color: var(--accent); }
+.cf-field textarea { resize: vertical; min-height: 120px; }
+.cf-submit {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: var(--off-black);
+  color: var(--off-white);
+  padding: 16px 40px;
+  align-self: flex-start;
+  transition: background 0.3s ease;
+}
+.cf-submit:hover { background: var(--charcoal); }
+.cf-success {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--accent-dark);
+  display: none;
+}
+.cf-success.visible { display: block; }
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--off-black);
+  padding: 64px clamp(24px, 6vw, 96px);
+}
+.footer-inner {
+  max-width: 1440px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--off-white);
+  letter-spacing: 0.03em;
+}
+.footer-tagline {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+}
+.footer-links {
+  display: flex; gap: 28px; margin: 8px 0;
+}
+.footer-links a {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-copy {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+}
+.footer-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(255,255,255,0.12);
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .story-block { grid-template-columns: 1fr; gap: 40px; }
+  .artist-feature { grid-template-columns: 1fr; gap: 40px; }
+  .artist-feature--alt { direction: ltr; }
+  .step-content { grid-template-columns: 1fr; gap: 40px; }
+  .process-step.step-reverse .step-content { direction: ltr; }
+  .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+  .media-grid { grid-template-columns: 1fr 1fr; }
+  .media-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.06); }
+  .media-item:nth-child(2n) { border-right: none; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gi-large { grid-column: span 2; }
+  .gi-wide { grid-column: span 2; }
+  .gi-tall { grid-row: span 1; }
+}
+
+@media (max-width: 768px) {
+  :root { --section-pad: 64px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .timeline-item { grid-template-columns: 60px 1px 1fr; gap: 0 20px; }
+  .media-grid { grid-template-columns: 1fr; }
+  .media-item { border-right: none !important; }
+  .pb-text { gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .story-image-frame .img-placeholder { height: 320px; }
+  .af-image { height: 360px; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .hero-scroll-hint { display: none; }
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gi-large, .gi-wide { grid-column: span 1; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .contact-socials { flex-wrap: wrap; }
+}
+
+</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Helvetica+Neue:wght@300;400&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       PASSWORD GATE
+  ══════════════════════════════════════════ -->
+  <div id="password-gate">
+    <div class="gate-bg"></div>
+    <div class="gate-content">
+      <div class="gate-logo">
+        <span class="gate-est">Est. 1962</span>
+        <h1 class="gate-title">Stephens<br>Tapestry<br>Studio</h1>
+      </div>
+      <div class="gate-message">
+        <p>Hi Tina, let me know what you think.<br>Not a final product, but a proof of concept/idea.</p>
+      </div>
+      <div class="gate-form">
+        <div class="gate-input-wrap">
+          <input type="password" id="gate-input" placeholder="Enter access code" maxlength="10" autocomplete="off" />
+          <button id="gate-btn">Enter</button>
+        </div>
+        <div class="gate-error" id="gate-error">Incorrect code. Please try again.</div>
+      </div>
+    </div>
+    <div class="gate-footer">
+      <span>Private Preview — Not for Distribution</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MAIN SITE
+  ══════════════════════════════════════════ -->
+  <div id="main-site" class="hidden">
+
+    <!-- NAV -->
+    <nav id="nav">
+      <div class="nav-inner">
+        <div class="nav-logo">
+          <a href="#home">Stephens Tapestry Studio</a>
+        </div>
+        <div class="nav-links">
+          <a href="#story">Our Story</a>
+          <a href="#process">Process</a>
+          <a href="#artists">Artists</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#media">Media</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#story" class="mm-link">Our Story</a>
+      <a href="#process" class="mm-link">Process</a>
+      <a href="#artists" class="mm-link">Artists</a>
+      <a href="#gallery" class="mm-link">Gallery</a>
+      <a href="#media" class="mm-link">Media</a>
+      <a href="#contact" class="mm-link">Contact</a>
+    </div>
+
+    <!-- ══ 1. HOME ══ -->
+    <section id="home" class="section-home">
+      <div class="hero-media">
+        <!-- Replace with actual hero image: assets/images/hero.jpg -->
+        <div class="hero-placeholder" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1800&q=80')"></div>
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="hero-text">
+        <div class="hero-est fade-up">Est. 1962</div>
+        <h1 class="hero-heading fade-up delay-1">
+          Stephens<br>
+          <em>Tapestry</em><br>
+          Studio
+        </h1>
+        <div class="hero-sub fade-up delay-2">
+          Handwoven tapestries in collaboration<br>with the world's leading artists
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+
+      <!-- INTRO BAND -->
+      <div class="intro-band fade-up delay-3">
+        <p class="intro-statement">
+          Every part of our tapestry process — from carding, spinning and dyeing to weaving — is proudly done by hand by more than 30 women across Johannesburg and Eswatini.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══ 2. OUR STORY ══ -->
+    <section id="story" class="section section-story">
+      <div class="section-header">
+        <div class="section-label">The Studio</div>
+        <h2 class="section-title">Our Story</h2>
+      </div>
+
+      <div class="story-block story-block--lead">
+        <div class="story-text">
+          <p class="story-pullquote">The Stephens Tapestry Studio has its roots in the north of Swaziland — now Eswatini — a tiny monarchy between South Africa and Mozambique.</p>
+          <p>In the late 1940s, Coral Stephens moved from Johannesburg with her husband Robert to a remote mountainous region where he established a commercial forestry operation. Her friends had given her a small loom to keep her occupied. Coral had no intention of being bored.</p>
+          <p>Sylvia Mantanga, a Xhosa woman who came with Coral from Johannesburg, had been taught to weave by Swedish missionaries in the Eastern Cape — where a burgeoning industry of angora goat farming was already taking place. Angora goats produce the rich, robust mohair with which Coral Stephens fabrics became synonymous.</p>
+        </div>
+        <div class="story-image-frame">
+          <!-- Replace: assets/images/coral-stephens.jpg -->
+          <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1605289355680-75fb41239154?w=900&q=80')"></div>
+          <div class="img-caption">Coral Stephens at Boshimela, Eswatini</div>
+        </div>
+      </div>
+
+      <div class="story-timeline">
+        <div class="timeline-item reveal">
+          <div class="tl-year">1940s</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>Boshimela</h3>
+            <p>Coral and Robert establish a life in the mountains. News spreads about the curtains and carpets adorning the house. Orders begin to flow — first from houseguests, then from their friends.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="tl-year">1960s</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>Cecil Skotnes &amp; The First Tapestry</h3>
+            <p>Marguerite Stephens, Coral's eldest daughter, attended an exhibition of South African artist Cecil Skotnes. Coral declared that her daughter would weave one of the woodblock works. It sold instantly — and a career was born. The woodblock still hangs in Marguerite's Johannesburg home.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="tl-year">1980s</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>The Royal Hotel Commission</h3>
+            <p>A monumental 23-metre tapestry, created in collaboration with Judith Mason, was commissioned for the Royal Hotel in Durban — where it still hangs today.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="tl-year">1990s</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>William Kentridge</h3>
+            <p>Marguerite met a young William Kentridge. Immediately taken with the amplified textural interpretation of his work, he has since collaborated extensively with the studio — propelling Stephens Tapestry to the world's greatest museums and private collections.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="tl-year">2001</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>Murrae Stephens</h3>
+            <p>Coral's grand-daughter in law, Murrae Stephens, takes over the business. Under her direction the studio continues to thrive and Coral Stephens handwoven fabrics become a mainstay for interior designers worldwide.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="tl-year">2016</div>
+          <div class="tl-line"></div>
+          <div class="tl-body">
+            <h3>Christine Weavind</h3>
+            <p>The third generation of Stephens women. Christine formally took over the studio at the end of 2016. She first learned to weave at age 7, sitting beside her mother at the loom. The Johannesburg and Eswatini studios combined now employ 30 women — some grandchildren of the original team.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-footer-quote reveal">
+        <blockquote>
+          "The Stephens Tapestry Studio is an all women operation — except of course for some of the artists — and some of the goats."
+          <cite>— Christine Weavind</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ══ 3. PROCESS ══ -->
+    <section id="process" class="section section-process">
+      <div class="section-header">
+        <div class="section-label">Craft</div>
+        <h2 class="section-title">The Process</h2>
+      </div>
+
+      <div class="process-intro reveal">
+        <p>Each tapestry is the result of months of patient, skilled handwork — a collaboration between artist vision and weaver craft that spans two countries.</p>
+      </div>
+
+      <div class="process-steps">
+
+        <div class="process-step reveal">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <div class="step-image">
+              <!-- Replace: assets/images/process-carding.jpg -->
+              <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1586864387789-628af9feed72?w=900&q=80')"></div>
+            </div>
+            <div class="step-text">
+              <h3>Carding &amp; Spinning</h3>
+              <p>We begin with mohair from goats in the Eastern Cape. Carding and spinning happens in Eswatini, often as homestead work. This gives the women flexibility — they can spin while looking after children, farming, or managing other responsibilities.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step reveal step-reverse">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <div class="step-image">
+              <!-- Replace: assets/images/process-dyeing.jpg -->
+              <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1558618047-f4e50f5f23c4?w=900&q=80')"></div>
+            </div>
+            <div class="step-text">
+              <h3>Dyeing</h3>
+              <p>Dyeing is a patient and intuitive process. We work with mohair because its natural sheen and lustre take colour with remarkable brilliance — giving our tapestries their signature vibrancy. Over the years the studio has developed several hundred colour charts, each colour assigned a number.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step reveal">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <div class="step-image">
+              <!-- Replace: assets/images/process-cartoon.jpg -->
+              <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900&q=80')"></div>
+            </div>
+            <div class="step-text">
+              <h3>Cartoon Development</h3>
+              <p>Once the artist has completed the design, a high-resolution image is printed to guide annotation and weaving. A second print — produced at the exact scale of the tapestry — becomes the "cartoon": the full-sized template placed behind the warp threads, serving as the weaver's visual map for colour, form and detail throughout the weaving.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step reveal step-reverse">
+          <div class="step-number">04</div>
+          <div class="step-content">
+            <div class="step-image">
+              <!-- Replace: assets/images/process-weaving.jpg -->
+              <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=900&q=80')"></div>
+            </div>
+            <div class="step-text">
+              <h3>Weaving</h3>
+              <p>Teams of up to six weavers translate and amplify the artist's original design into tapestries that hang in museums and private collections around the world. Depending on the size and intricacy of the work, the weaving process can take between one and six months.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="process-banner reveal">
+        <div class="pb-inner" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1800&q=80')">
+          <div class="pb-overlay"></div>
+          <div class="pb-text">
+            <span>30 women</span>
+            <span>·</span>
+            <span>2 countries</span>
+            <span>·</span>
+            <span>60+ years</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 4. ARTISTS ══ -->
+    <section id="artists" class="section section-artists">
+      <div class="section-header">
+        <div class="section-label">Collaborations</div>
+        <h2 class="section-title">Artists</h2>
+      </div>
+
+      <div class="artists-intro reveal">
+        <p>For more than six decades, Stephens Tapestry Studio has collaborated with some of the world's most celebrated artists — translating works of singular vision into monumental woven form.</p>
+      </div>
+
+      <!-- WILLIAM KENTRIDGE -->
+      <div class="artist-feature reveal" id="artist-kentridge">
+        <div class="af-image">
+          <!-- Replace: assets/images/kentridge.jpg -->
+          <div class="img-placeholder dark" style="background-image:url('https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=1000&q=80')"></div>
+        </div>
+        <div class="af-content">
+          <div class="af-label">Artist</div>
+          <h3 class="af-name">William Kentridge</h3>
+          <p class="af-bio">South Africa's most celebrated contemporary artist. Kentridge's collaboration with the studio began in the 1990s when he met Marguerite Stephens and was immediately captivated by the amplified textural interpretation of his work. His tapestries are exhibited in the world's leading museums and are coveted by collectors globally.</p>
+          <p class="af-bio">Sold and exhibited through Goodman Gallery (Johannesburg, Cape Town, London), Marian Goodman Gallery (New York, Paris, London) and Lia Rumma Gallery (Naples, Milan).</p>
+          <div class="af-series">
+            <div class="af-series-label">Series</div>
+            <div class="af-series-list">
+              <a href="https://stephenstapestrystudio.com/collections/the-porter-series" target="_blank">The Porter Series</a>
+              <a href="https://stephenstapestrystudio.com/collections/triumph-laments-series" target="_blank">Triumph &amp; Laments Series</a>
+              <a href="https://stephenstapestrystudio.com/collections/the-metro-series" target="_blank">The Metro Series</a>
+              <a href="https://stephenstapestrystudio.com/collections/the-nose-series" target="_blank">The Nose Series</a>
+              <a href="https://stephenstapestrystudio.com/collections/royal-academy-tapestries" target="_blank">Royal Academy Tapestries</a>
+              <a href="https://stephenstapestrystudio.com/collections/the-manet-series" target="_blank">The Manet Series</a>
+              <a href="https://stephenstapestrystudio.com/collections/various-unaffliated-tapestries" target="_blank">Various Tapestries</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAM NHLENGETHWA -->
+      <div class="artist-feature reveal artist-feature--alt" id="artist-sam">
+        <div class="af-image">
+          <!-- Replace: assets/images/nhlengethwa.jpg -->
+          <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1000&q=80')"></div>
+        </div>
+        <div class="af-content">
+          <div class="af-label">Artist</div>
+          <h3 class="af-name">Sam Nhlengethwa</h3>
+          <p class="af-bio">Renowned for his vibrant, jazz-inflected compositions, Sam Nhlengethwa's works translate into tapestry with a remarkable dynamism. His scenes of township life, music, and urban energy find extraordinary new life in mohair.</p>
+          <div class="af-series">
+            <div class="af-series-label">Works</div>
+            <div class="af-series-list">
+              <a href="https://stephenstapestrystudio.com/products/after-miles-davis" target="_blank">After Miles Davis</a>
+              <a href="https://stephenstapestrystudio.com/products/jazz-night" target="_blank">Jazz Night</a>
+              <a href="https://stephenstapestrystudio.com/products/kippies-johannesburg" target="_blank">Kippies, Johannesburg</a>
+              <a href="https://stephenstapestrystudio.com/products/nightshift" target="_blank">Nightshift</a>
+              <a href="https://stephenstapestrystudio.com/products/drum" target="_blank">Drum</a>
+              <a href="https://stephenstapestrystudio.com/products/underground" target="_blank">Underground</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROBERT HODGINS -->
+      <div class="artist-feature reveal" id="artist-hodgins">
+        <div class="af-image">
+          <!-- Replace: assets/images/hodgins.jpg -->
+          <div class="img-placeholder dark" style="background-image:url('https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1000&q=80')"></div>
+        </div>
+        <div class="af-content">
+          <div class="af-label">Artist</div>
+          <h3 class="af-name">Robert Hodgins</h3>
+          <p class="af-bio">Robert Hodgins's bold, satirical figurative works — populated by his characteristic buffoonish characters — translate into tapestry with unexpected grandeur. His wry humour and vivid palette make for some of the studio's most striking woven pieces.</p>
+          <div class="af-series">
+            <div class="af-series-label">Works</div>
+            <div class="af-series-list">
+              <a href="https://stephenstapestrystudio.com/products/roccoco-1" target="_blank">Roccoco 1</a>
+              <a href="https://stephenstapestrystudio.com/products/roccoco-2" target="_blank">Roccoco 2</a>
+              <a href="https://stephenstapestrystudio.com/products/queen-of-spades" target="_blank">Queen of Spades</a>
+              <a href="https://stephenstapestrystudio.com/products/king-of-hearts" target="_blank">King of Hearts</a>
+              <a href="https://stephenstapestrystudio.com/products/the-emperor" target="_blank">The Emperor</a>
+              <a href="https://stephenstapestrystudio.com/products/blue-suit-guy" target="_blank">Blue Suit Guy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIANE VICTOR -->
+      <div class="artist-feature reveal artist-feature--alt" id="artist-diane">
+        <div class="af-image">
+          <!-- Replace: assets/images/victor.jpg -->
+          <div class="img-placeholder" style="background-image:url('https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1000&q=80')"></div>
+        </div>
+        <div class="af-content">
+          <div class="af-label">Artist</div>
+          <h3 class="af-name">Diane Victor</h3>
+          <p class="af-bio">Diane Victor's unflinching, psychologically charged imagery — drawn in smoke, ash, and charcoal — finds a haunting counterpart in the tactile richness of woven mohair. Her works with the studio occupy a unique intersection of vulnerability and material permanence.</p>
+          <div class="af-series">
+            <div class="af-series-label">Works</div>
+            <div class="af-series-list">
+              <a href="https://stephenstapestrystudio.com/products/bareback-in-studio" target="_blank">Bareback (In Studio)</a>
+              <a href="https://stephenstapestrystudio.com/products/bareback" target="_blank">Bareback</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MORE ARTISTS NOTE -->
+      <div class="artists-more reveal">
+        <p>The studio has also worked with Judith Mason, Nel Erasmus, Graeme Black, Walter Battiss, Penny Siopis, Norman Catherine, Cecil Skotnes, and Misha Kahn, among others.</p>
+        <a href="https://stephenstapestrystudio.com" target="_blank" class="btn-outline">View Full Collection →</a>
+      </div>
+
+    </section>
+
+    <!-- ══ 5. GALLERY ══ -->
+    <section id="gallery" class="section section-gallery">
+      <div class="section-header">
+        <div class="section-label">Studio</div>
+        <h2 class="section-title">Gallery</h2>
+      </div>
+
+      <div class="gallery-intro reveal">
+        <p>Works from the studio's archives and current collection.</p>
+        <p class="gallery-note">← Replace placeholder images below with actual studio photography →</p>
+      </div>
+
+      <div class="gallery-grid">
+        <!-- Each item: replace background-image with actual work photography -->
+        <div class="gallery-item gi-large reveal" data-lightbox="1">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=1200&q=80')">
+            <div class="gi-overlay"><span>Kentridge — Porter Series</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-tall reveal" data-lightbox="2">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80')">
+            <div class="gi-overlay"><span>Nhlengethwa — Jazz Night</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-square reveal" data-lightbox="3">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80')">
+            <div class="gi-overlay"><span>Victor — Bareback</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-square reveal" data-lightbox="4">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1605289355680-75fb41239154?w=800&q=80')">
+            <div class="gi-overlay"><span>Hodgins — Roccoco</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-wide reveal" data-lightbox="5">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80')">
+            <div class="gi-overlay"><span>Studio — Eswatini</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-tall reveal" data-lightbox="6">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80')">
+            <div class="gi-overlay"><span>Weaving in progress</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-square reveal" data-lightbox="7">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80')">
+            <div class="gi-overlay"><span>Mohair — Eastern Cape</span></div>
+          </div>
+        </div>
+        <div class="gallery-item gi-square reveal" data-lightbox="8">
+          <div class="gi-inner" style="background-image:url('https://images.unsplash.com/photo-1586864387789-628af9feed72?w=800&q=80')">
+            <div class="gi-overlay"><span>Carding</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGHTBOX -->
+      <div class="lightbox" id="lightbox">
+        <div class="lb-close" id="lb-close">✕</div>
+        <div class="lb-prev" id="lb-prev">‹</div>
+        <div class="lb-next" id="lb-next">›</div>
+        <div class="lb-image-wrap">
+          <div class="lb-image" id="lb-image"></div>
+        </div>
+        <div class="lb-caption" id="lb-caption"></div>
+      </div>
+    </section>
+
+    <!-- ══ 6. MEDIA ══ -->
+    <section id="media" class="section section-media">
+      <div class="section-header">
+        <div class="section-label">Press &amp; Exhibitions</div>
+        <h2 class="section-title">Media</h2>
+      </div>
+
+      <div class="media-grid">
+
+        <div class="media-item reveal">
+          <div class="mi-year">2025</div>
+          <div class="mi-body">
+            <div class="mi-venue">Latitudes Centre for the Arts</div>
+            <div class="mi-title">William Kentridge, Judith Mason, Nel Erasmus, Graeme Black, Walter Battiss</div>
+            <div class="mi-location">Shepstone Gardens, Johannesburg</div>
+            <a href="https://latitudes.online/shows/lca-presentations/lca-stephens-tapestry-studio.html" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2025</div>
+          <div class="mi-body">
+            <div class="mi-venue">Standard Bank Art Lab</div>
+            <div class="mi-title">Penny Siopis — It's Woven Into Who We Are</div>
+            <div class="mi-location">Johannesburg</div>
+            <a href="https://sponsorships.standardbank.com/sbgs/sponsorship/arts-and-culture/gallery/exhibitions/its-woven-into-who-we-are" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2025</div>
+          <div class="mi-body">
+            <div class="mi-venue">Africa Textile Talks — Twyg</div>
+            <div class="mi-title">Featured Studio</div>
+            <div class="mi-location">Cape Town</div>
+            <a href="https://twyg.co.za/africa-textile-talks-2025/" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2024</div>
+          <div class="mi-body">
+            <div class="mi-venue">Hostler Burrows — New York</div>
+            <div class="mi-title">Graeme Black</div>
+            <div class="mi-location">New York, NY</div>
+            <a href="https://www.graemeblack.com/tapestry-collaboration-with-stephens-tapestry-studio-south-africa" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2023</div>
+          <div class="mi-body">
+            <div class="mi-venue">Standard Bank Gallery</div>
+            <div class="mi-title">Sam Nhlengethwa</div>
+            <div class="mi-location">Johannesburg</div>
+            <a href="https://sponsorships.standardbank.com/sbgs/sponsorship/arts-and-culture/arts-insights/Heritage-month" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2022</div>
+          <div class="mi-body">
+            <div class="mi-venue">Royal Academy of Arts</div>
+            <div class="mi-title">William Kentridge Exhibition</div>
+            <div class="mi-location">London, UK</div>
+            <a href="https://selectionsarts.com/william-kentridge-in-his-own-words/" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2019–2020</div>
+          <div class="mi-body">
+            <div class="mi-venue">Zeitz MOCAA</div>
+            <div class="mi-title">William Kentridge — Why Should I Hesitate</div>
+            <div class="mi-location">Cape Town</div>
+            <a href="https://zeitzmocaa.museum/exhibition/exhibitions/why-should-i-hesitate-putting-drawings-to-work/" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">2007–2008</div>
+          <div class="mi-body">
+            <div class="mi-venue">Philadelphia Museum of Art</div>
+            <div class="mi-title">William Kentridge Tapestries</div>
+            <div class="mi-location">Philadelphia, PA</div>
+            <a href="https://www.e-flux.com/announcements/39778/william-kentridge-tapestries/" target="_blank" class="mi-link">Read More →</a>
+          </div>
+        </div>
+
+        <div class="media-item reveal">
+          <div class="mi-year">1978</div>
+          <div class="mi-body">
+            <div class="mi-venue">Royal Hotel Commission</div>
+            <div class="mi-title">Judith Mason — 23 metre tapestry, still in situ</div>
+            <div class="mi-location">Durban, KZN</div>
+            <a href="https://web.facebook.com/photo.php?fbid=3004547876313431&id=1772680266166871&set=a.1772719512829613" target="_blank" class="mi-link">View →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="media-press reveal">
+        <div class="mp-label">Selected Press</div>
+        <div class="press-list">
+          <a href="https://stephenstapestrystudio.com/blogs/news/nonsense-of-the-best-sort" target="_blank" class="press-item">
+            <span class="pi-title">Nonsense of the Best Sort</span>
+            <span class="pi-arrow">→</span>
+          </a>
+          <a href="https://stephenstapestrystudio.com/blogs/news/on-the-map-artist-william-kentridge-s-tapestry-for-ermenegildo-zegna-s-london-store" target="_blank" class="press-item">
+            <span class="pi-title">William Kentridge's Tapestry for Ermenegildo Zegna, London</span>
+            <span class="pi-arrow">→</span>
+          </a>
+          <a href="https://stephenstapestrystudio.com/blogs/news/art-bold-tapestries-revivify-a-medium" target="_blank" class="press-item">
+            <span class="pi-title">Bold Tapestries Revivify a Medium</span>
+            <span class="pi-arrow">→</span>
+          </a>
+          <a href="https://stephenstapestrystudio.com/blogs/news/from-paper-to-weave-william-kentridge-s-tapestries-return-to-south-africa" target="_blank" class="press-item">
+            <span class="pi-title">From Paper to Weave: Kentridge's Tapestries Return to South Africa</span>
+            <span class="pi-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══ 7. CONTACT ══ -->
+    <section id="contact" class="section section-contact">
+      <div class="section-header">
+        <div class="section-label">Get in Touch</div>
+        <h2 class="section-title">Contact</h2>
+      </div>
+
+      <div class="contact-layout">
+        <div class="contact-left reveal">
+          <div class="contact-block">
+            <div class="cb-label">Studio Director</div>
+            <div class="cb-value">Tina Weavind (Christine)</div>
+          </div>
+          <div class="contact-block">
+            <div class="cb-label">Phone / WhatsApp</div>
+            <div class="cb-value"><a href="tel:+27826045388">+27 (82) 604 5388</a></div>
+          </div>
+          <div class="contact-block">
+            <div class="cb-label">Email</div>
+            <div class="cb-value"><a href="mailto:tina@stephenstapestrystudio.com">tina@stephenstapestrystudio.com</a></div>
+          </div>
+          <div class="contact-block">
+            <div class="cb-label">Locations</div>
+            <div class="cb-value">Johannesburg, South Africa<br>Piggs Peak, Eswatini</div>
+          </div>
+          <div class="contact-block">
+            <div class="cb-label">Studio Visits</div>
+            <div class="cb-value">By appointment only</div>
+          </div>
+          <div class="contact-socials">
+            <a href="https://www.instagram.com/stephenstapestry/" target="_blank" class="social-link">Instagram</a>
+            <a href="https://www.facebook.com/stephenstapestry/" target="_blank" class="social-link">Facebook</a>
+            <a href="https://www.linkedin.com/company/stephens-tapestry-studio" target="_blank" class="social-link">LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="contact-right reveal">
+          <form class="contact-form" id="contact-form" onsubmit="handleContactForm(event)">
+            <div class="cf-field">
+              <label>Name</label>
+              <input type="text" placeholder="Your full name" required />
+            </div>
+            <div class="cf-field">
+              <label>Email</label>
+              <input type="email" placeholder="your@email.com" required />
+            </div>
+            <div class="cf-field">
+              <label>Subject</label>
+              <select>
+                <option value="">Select enquiry type</option>
+                <option>Commission a Tapestry</option>
+                <option>Artist Collaboration</option>
+                <option>Purchase Enquiry</option>
+                <option>Studio Visit</option>
+                <option>Media / Press</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="cf-field">
+              <label>Message</label>
+              <textarea placeholder="Tell us about your enquiry…" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="cf-submit">Send Enquiry</button>
+            <div class="cf-success" id="cf-success">Thank you — we will be in touch shortly.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-logo">Stephens Tapestry Studio</div>
+        <div class="footer-tagline">Est. 1962 · Johannesburg &amp; Eswatini</div>
+        <div class="footer-links">
+          <a href="https://www.instagram.com/stephenstapestry/" target="_blank">Instagram</a>
+          <a href="https://www.facebook.com/stephenstapestry/" target="_blank">Facebook</a>
+          <a href="https://www.linkedin.com/company/stephens-tapestry-studio" target="_blank">LinkedIn</a>
+          <a href="https://stephenstapestrystudio.com" target="_blank">Website</a>
+        </div>
+        <div class="footer-copy">© 2025 Stephens Tapestry Studio. All rights reserved.</div>
+        <div class="footer-note">This is a private proof-of-concept preview.</div>
+      </div>
+    </footer>
+
+  </div><!-- end #main-site -->
+
+  <script>
+/* ══════════════════════════════════════════════════════
+   STEPHENS TAPESTRY STUDIO — script.js
+══════════════════════════════════════════════════════ */
+
+'use strict';
+
+/* ── PASSWORD GATE ── */
+(function () {
+  const CORRECT = '8073';
+  const gate = document.getElementById('password-gate');
+  const main = document.getElementById('main-site');
+  const input = document.getElementById('gate-input');
+  const btn = document.getElementById('gate-btn');
+  const errEl = document.getElementById('gate-error');
+  const wrap = document.querySelector('.gate-input-wrap');
+
+  function tryEnter() {
+    const val = input.value.trim();
+    if (val === CORRECT) {
+      gate.classList.add('fade-exit');
+      setTimeout(() => {
+        gate.style.display = 'none';
+        main.classList.remove('hidden');
+        // Trigger hero animations
+        document.querySelectorAll('.fade-up').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 150);
+        });
+        initSite();
+      }, 850);
+    } else {
+      wrap.classList.add('shake');
+      errEl.classList.add('visible');
+      input.value = '';
+      input.focus();
+      setTimeout(() => {
+        wrap.classList.remove('shake');
+      }, 500);
+    }
+  }
+
+  btn.addEventListener('click', tryEnter);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
+  input.addEventListener('input', () => { errEl.classList.remove('visible'); });
+})();
+
+/* ── MAIN SITE INIT ── */
+function initSite() {
+  initNav();
+  initReveal();
+  initGallery();
+  initMobileMenu();
+  initSmoothScroll();
+}
+
+/* ── NAV ── */
+function initNav() {
+  const nav = document.getElementById('nav');
+  function onScroll() {
+    if (window.scrollY > 40) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+/* ── MOBILE MENU ── */
+function initMobileMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  // Close on link click
+  document.querySelectorAll('.mm-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+}
+
+/* ── SMOOTH SCROLL ── */
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const navH = document.getElementById('nav').offsetHeight;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+/* ── SCROLL REVEAL ── */
+function initReveal() {
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            // Stagger siblings in the same container
+            const siblings = Array.from(
+              entry.target.parentElement.querySelectorAll('.reveal:not(.visible)')
+            );
+            const idx = siblings.indexOf(entry.target);
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, Math.min(idx * 80, 240));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    revealEls.forEach(el => observer.observe(el));
+  } else {
+    // Fallback: show all
+    revealEls.forEach(el => el.classList.add('visible'));
+  }
+}
+
+/* ── GALLERY + LIGHTBOX ── */
+function initGallery() {
+  const items = document.querySelectorAll('.gallery-item');
+  const lightbox = document.getElementById('lightbox');
+  const lbImage = document.getElementById('lb-image');
+  const lbCaption = document.getElementById('lb-caption');
+  const lbClose = document.getElementById('lb-close');
+  const lbPrev = document.getElementById('lb-prev');
+  const lbNext = document.getElementById('lb-next');
+
+  // Build image data from gallery items
+  const imageData = Array.from(items).map(item => {
+    const inner = item.querySelector('.gi-inner');
+    const caption = item.querySelector('.gi-overlay span');
+    const bg = inner ? inner.style.backgroundImage : '';
+    return {
+      bg,
+      caption: caption ? caption.textContent : ''
+    };
+  });
+
+  let currentIndex = 0;
+
+  function openLightbox(idx) {
+    currentIndex = idx;
+    showImage(currentIndex);
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function showImage(idx) {
+    const data = imageData[idx];
+    lbImage.style.backgroundImage = data.bg;
+    lbCaption.textContent = data.caption;
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + imageData.length) % imageData.length;
+    showImage(currentIndex);
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % imageData.length;
+    showImage(currentIndex);
+  }
+
+  items.forEach((item, idx) => {
+    item.addEventListener('click', () => openLightbox(idx));
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', prevImage);
+  lbNext.addEventListener('click', nextImage);
+
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') prevImage();
+    if (e.key === 'ArrowRight') nextImage();
+  });
+}
+
+/* ── CONTACT FORM ── */
+function handleContactForm(e) {
+  e.preventDefault();
+  const success = document.getElementById('cf-success');
+  const btn = document.querySelector('.cf-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  // Simulate async send
+  setTimeout(() => {
+    btn.style.display = 'none';
+    success.classList.add('visible');
+    // Reset after delay
+    setTimeout(() => {
+      e.target.reset();
+      btn.style.display = '';
+      btn.textContent = 'Send Enquiry';
+      btn.disabled = false;
+      success.classList.remove('visible');
+    }, 5000);
+  }, 1200);
+}
+
+</script>
+</body>
+</html>
